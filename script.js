@@ -74,7 +74,7 @@ buttons.forEach(button => {
                 const num = parseFloat(currentInput);
                 const result = applyFunction(value, num);
                 currentInput = result.toString();
-                expression = value + '(' + previousInput || currentInput + ')';
+                expression = value + '(' + (previousInput || currentInput) + ')';
                 resultEl.textContent = currentInput;
                 previousInput = '';
                 operator = '';
@@ -127,3 +127,26 @@ function applyFunction(func, num) {
 }
 
 updateDisplay();
+
+window.addEventListener('keydown', (event) => {
+    const key = event.key;
+    let buttonToClick;
+    
+    const allButtons = document.querySelectorAll('.btn');
+
+    if (key >= '0' && key <= '9' || key === '.') {
+        buttonToClick = [...allButtons].find(btn => btn.textContent === key);
+    } else if (['+', '-', '*', '/'].includes(key)) {
+        buttonToClick = [...allButtons].find(btn => btn.textContent === key);
+    } else if (key === 'Enter' || key === '=') {
+        event.preventDefault();
+        buttonToClick = document.getElementById('equals');
+    } else if (key === 'Backspace' || key === 'Escape') {
+        buttonToClick = [...allButtons].find(btn => btn.textContent === 'c');
+    }
+
+    if (buttonToClick) {
+        buttonToClick.click();
+    }
+});
+
