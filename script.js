@@ -128,21 +128,69 @@ function applyFunction(func, num) {
 
 updateDisplay();
 
+// --- Keyboard Support Section ---
 window.addEventListener('keydown', (event) => {
     const key = event.key;
     let buttonToClick;
-    
+
     const allButtons = document.querySelectorAll('.btn');
 
-    if (key >= '0' && key <= '9' || key === '.') {
+    // Support for numbers and decimal point
+    if ((key >= '0' && key <= '9') || key === '.') {
         buttonToClick = [...allButtons].find(btn => btn.textContent === key);
-    } else if (['+', '-', '*', '/'].includes(key)) {
+    }
+    // Support for basic operators
+    else if (['+', '-', '*', '/'].includes(key)) {
         buttonToClick = [...allButtons].find(btn => btn.textContent === key);
-    } else if (key === 'Enter' || key === '=') {
+    }
+    // Support for Enter and equals (=)
+    else if (key === 'Enter' || key === '=') {
         event.preventDefault();
-        buttonToClick = document.getElementById('equals');
-    } else if (key === 'Backspace' || key === 'Escape') {
-        buttonToClick = [...allButtons].find(btn => btn.textContent === 'c');
+        // Try to find button with text '='
+        buttonToClick = [...allButtons].find(btn => btn.textContent === '=');
+        // Or fallback to id 'equals'
+        if (!buttonToClick) buttonToClick = document.getElementById('equals');
+    }
+    // Support for Backspace and Escape as "clear"
+    else if (key === 'Backspace' || key === 'Escape') {
+        buttonToClick = [...allButtons].find(btn => btn.textContent.toLowerCase() === 'c');
+    }
+    // Support for parenthesis
+    else if (key === '(' || key === ')') {
+        buttonToClick = [...allButtons].find(btn => btn.textContent === '()');
+    }
+    // Support for percentage
+    else if (key === '%') {
+        buttonToClick = [...allButtons].find(btn => btn.textContent === '%');
+    }
+    // Support for pi and e
+    else if (key.toLowerCase() === 'p') {
+        buttonToClick = [...allButtons].find(btn => btn.textContent === 'π');
+    } else if (key.toLowerCase() === 'e') {
+        buttonToClick = [...allButtons].find(btn => btn.textContent === 'e');
+    }
+    // Support for scientific functions with first letter (optional)
+    else if (key.toLowerCase() === 's') {
+        buttonToClick = [...allButtons].find(btn => btn.textContent.toLowerCase() === 'sin');
+    } else if (key.toLowerCase() === 'c') {
+        // avoid conflict with clear
+        // only trigger if Shift is held (Shift+C = Cos)
+        if (event.shiftKey)
+            buttonToClick = [...allButtons].find(btn => btn.textContent.toLowerCase() === 'cos');
+    } else if (key.toLowerCase() === 't') {
+        buttonToClick = [...allButtons].find(btn => btn.textContent.toLowerCase() === 'tan');
+    } else if (key.toLowerCase() === 'l') {
+        if (event.shiftKey)
+            buttonToClick = [...allButtons].find(btn => btn.textContent.toLowerCase() === 'ln');
+        else
+            buttonToClick = [...allButtons].find(btn => btn.textContent.toLowerCase() === 'log');
+    } else if (key === 'r') {
+        buttonToClick = [...allButtons].find(btn => btn.textContent.toLowerCase() === 'sqrt');
+    } else if (key === 'x') {
+        if (event.shiftKey)
+            buttonToClick = [...allButtons].find(btn => btn.textContent.toLowerCase() === 'x²');
+        else
+            buttonToClick = [...allButtons].find(btn => btn.textContent.toLowerCase() === '1/x');
     }
 
     if (buttonToClick) {
